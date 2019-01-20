@@ -8,7 +8,7 @@ import java.awt.*;
 public class MainFrame extends JFrame {
     private Controller controller;
 
-    public MainFrame(Controller controller) throws HeadlessException {
+    public MainFrame(Controller controller) {
         this.controller = controller;
         init();
     }

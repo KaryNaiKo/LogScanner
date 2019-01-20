@@ -34,8 +34,4 @@ public class ScanFIleVisitor extends SimpleFileVisitor<Path> {
         }
         return FileVisitResult.CONTINUE;
     }
-
-    public BlockingQueue<Path> getQueue() {
-        return queue;
-    }
 }
