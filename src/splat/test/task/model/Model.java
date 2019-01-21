@@ -13,7 +13,7 @@ public class Model {
     private BlockingQueue<Path> queue;
 
     public Model() {
-        queue = new ArrayBlockingQueue<>(100);
+        queue = new ArrayBlockingQueue<>(1000);
     }
 
     public void setController(Controller controller) {
@@ -33,5 +33,9 @@ public class Model {
             }
         });
         thread.start();
+    }
+
+    public BlockingQueue<Path> getContentForTree() {
+        return queue;
     }
 }

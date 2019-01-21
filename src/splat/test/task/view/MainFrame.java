@@ -25,7 +25,7 @@ public class MainFrame extends JFrame {
 
     private void initGUI() {
         JScrollPane scrollTextPane = new JScrollPane(new TextPanel());
-        JScrollPane scrollTreePane = new JScrollPane(new TreePanel());
+        JScrollPane scrollTreePane = new JScrollPane(new TreePanel(controller.getContentForTree()));
 
         this.add(new HeadPanel(controller), BorderLayout.NORTH);
         JPanel pane = new JPanel();

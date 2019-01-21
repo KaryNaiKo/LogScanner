@@ -28,6 +28,7 @@ public class ScanFIleVisitor extends SimpleFileVisitor<Path> {
                 for (String line; (line = reader.readLine()) != null; ) {
                     if(line.contains(keyWord)){
                         queue.add(file);
+                        break;
                     }
                 }
             }
