@@ -1,5 +1,7 @@
 package splat.test.task.view;
 
+import splat.test.task.controller.Controller;
+
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -13,9 +15,11 @@ public class TreePanel extends JPanel {
     private DefaultMutableTreeNode rootNode;
     private DefaultTreeModel treeModel;
     private BlockingQueue<Path> queue;
+    private Controller controller;
 
-    public TreePanel(BlockingQueue<Path> queue) {
-        this.queue = queue;
+    public TreePanel(Controller controller) {
+        this.controller = controller;
+        this.queue = controller.getContentForTree();
         init();
     }
 
@@ -37,17 +41,13 @@ public class TreePanel extends JPanel {
             }
         });
 
-        Thread treePopulator = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    if(!queue.isEmpty()) {
-                        Path path = queue.poll();
-                        addToTreePanel(path);
-                        //treeModel.insertNodeInto(new DefaultMutableTreeNode(path.toString()), rootNode, rootNode.getChildCount());
-                        treeModel.reload();
-                        System.out.println("poll from queue " + path.toString());
-                    }
+        Thread treePopulator = new Thread(() -> {
+            while (true) {
+                if (!queue.isEmpty()) {
+                    Path path = queue.poll();
+                    addToTreePanel(path);
+                    treeModel.reload();
+                    System.out.println("poll from queue " + path.toString());
                 }
             }
         });
@@ -91,5 +91,10 @@ public class TreePanel extends JPanel {
             cur.add(node);
             cur = node;
         }
+    }
+
+    public void clear() {
+        rootNode.removeAllChildren();
+        treeModel.reload();
     }
 }

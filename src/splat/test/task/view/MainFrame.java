@@ -7,9 +7,13 @@ import java.awt.*;
 
 public class MainFrame extends JFrame {
     private Controller controller;
+    private TextPanel textPanel;
+    private TreePanel treePanel;
 
     public MainFrame(Controller controller) {
         this.controller = controller;
+        textPanel = new TextPanel(controller);
+        treePanel = new TreePanel(controller);
         init();
     }
 
@@ -24,8 +28,8 @@ public class MainFrame extends JFrame {
     }
 
     private void initGUI() {
-        JScrollPane scrollTextPane = new JScrollPane(new TextPanel());
-        JScrollPane scrollTreePane = new JScrollPane(new TreePanel(controller.getContentForTree()));
+        JScrollPane scrollTextPane = new JScrollPane(textPanel);
+        JScrollPane scrollTreePane = new JScrollPane(treePanel);
 
         this.add(new HeadPanel(controller), BorderLayout.NORTH);
         JPanel pane = new JPanel();
@@ -35,4 +39,11 @@ public class MainFrame extends JFrame {
         this.add(pane, BorderLayout.CENTER);
     }
 
+    public TextPanel getTextPanel() {
+        return textPanel;
+    }
+
+    public TreePanel getTreePanel() {
+        return treePanel;
+    }
 }

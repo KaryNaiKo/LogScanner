@@ -1,12 +1,16 @@
 package splat.test.task.view;
 
+import splat.test.task.controller.Controller;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class TextPanel extends JPanel {
     private JTextPane textPane = new JTextPane();
+    private Controller controller;
 
-    public TextPanel() {
+    public TextPanel(Controller controller) {
+        this.controller = controller;
         init();
     }
 

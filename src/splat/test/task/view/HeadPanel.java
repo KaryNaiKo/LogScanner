@@ -93,6 +93,7 @@ public class HeadPanel extends JPanel {
             String dir = directory.getText();
             try {
                 Path path = Paths.get(dir);
+                controller.clearJTree();
                 controller.startScan(path, fileExtension.getText(), keyWord.getText());
             } catch (Exception e1) {
                 ExceptionHandler.logPaneExeption(HeadPanel.this, "Incorrect directory");
@@ -103,6 +104,7 @@ public class HeadPanel extends JPanel {
     private class CancelScanListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            controller.stopScan();
             System.out.println("cansel");
         }
     }

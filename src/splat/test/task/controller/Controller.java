@@ -25,4 +25,12 @@ public class Controller {
     public BlockingQueue<Path> getContentForTree() {
         return model.getContentForTree();
     }
+
+    public void stopScan() {
+        model.stopScan();
+    }
+
+    public void clearJTree() {
+        mainFrame.getTreePanel().clear();
+    }
 }

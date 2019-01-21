@@ -11,6 +11,7 @@ import java.util.concurrent.BlockingQueue;
 public class Model {
     private Controller controller;
     private BlockingQueue<Path> queue;
+    private ScanFileVisitor visitor;
 
     public Model() {
         queue = new ArrayBlockingQueue<>(1000);
@@ -24,7 +25,7 @@ public class Model {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                ScanFIleVisitor visitor = new ScanFIleVisitor(keyWord, fileExtension, queue);
+                visitor = new ScanFileVisitor(keyWord, fileExtension, queue);
                 try {
                     Files.walkFileTree(path,  visitor);
                 } catch (IOException e) {
@@ -37,5 +38,9 @@ public class Model {
 
     public BlockingQueue<Path> getContentForTree() {
         return queue;
+    }
+
+    public void stopScan() {
+        visitor.stop();
     }
 }
