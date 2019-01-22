@@ -33,4 +33,10 @@ public class Controller {
     public void clearJTree() {
         mainFrame.getTreePanel().clear();
     }
+
+    public void uploadTextToTextPanel(Path path) {
+        mainFrame.getTextPanel().clearTextPane();
+        String text = model.loadTextFromFile(path);
+        mainFrame.getTextPanel().addTextToPane(text);
+    }
 }

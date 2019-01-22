@@ -2,7 +2,10 @@ package splat.test.task.model;
 
 import splat.test.task.controller.Controller;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -42,5 +45,20 @@ public class Model {
 
     public void stopScan() {
         visitor.stop();
+    }
+
+    public String loadTextFromFile(Path path) {
+        try {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(path.toFile())))) {
+                StringBuilder sb = new StringBuilder();
+                for (String line; (line = reader.readLine()) != null; ) {
+                    sb.append(line).append('\n');
+                }
+                return sb.toString();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }

@@ -22,6 +22,7 @@ public class MainFrame extends JFrame {
         this.setVisible(true);
         this.setMinimumSize(new Dimension(600, 600));
         this.getRootPane().setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        this.setTitle("LogScanner");
 
         initGUI();
         pack();

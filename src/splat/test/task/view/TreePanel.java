@@ -7,7 +7,9 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.*;
 import java.awt.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.concurrent.BlockingQueue;
 
 public class TreePanel extends JPanel {
@@ -31,6 +33,7 @@ public class TreePanel extends JPanel {
         rootNode = new DefaultMutableTreeNode("found files");
         treeModel = new DefaultTreeModel(rootNode);
         jTree = new JTree(treeModel);
+        jTree.setRootVisible(false);
         this.add(jTree);
 
         jTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
@@ -38,6 +41,16 @@ public class TreePanel extends JPanel {
             @Override
             public void valueChanged(TreeSelectionEvent e) {
                 System.out.println("You are selected " + jTree.getLastSelectedPathComponent());
+                Object[] pathPieces = jTree.getSelectionPath().getPath();
+                StringBuilder sb = new StringBuilder();
+                for (int i = 1; i < pathPieces.length; i++) {
+                    sb.append(pathPieces[i]).append('\\');
+                }
+                String strPath = sb.substring(0, sb.length()-1);
+                Path path = Paths.get(strPath);
+                if(Files.isRegularFile(path)) {
+                    controller.uploadTextToTextPanel(path);
+                }
             }
         });
 
@@ -60,7 +73,7 @@ public class TreePanel extends JPanel {
         if (root == null) {
             root = new DefaultMutableTreeNode(".");
         }
-        String[] splittedFileName = path.toFile().getAbsolutePath().split("[\\\\/]");
+        String[] splittedFileName = path.toFile().getAbsolutePath().split("[\\\\]");
         DefaultMutableTreeNode cur = root.getNextNode();
         int i = 0;
         if (cur != null) {
