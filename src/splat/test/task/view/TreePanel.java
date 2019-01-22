@@ -41,15 +41,17 @@ public class TreePanel extends JPanel {
             @Override
             public void valueChanged(TreeSelectionEvent e) {
                 System.out.println("You are selected " + jTree.getLastSelectedPathComponent());
-                Object[] pathPieces = jTree.getSelectionPath().getPath();
-                StringBuilder sb = new StringBuilder();
-                for (int i = 1; i < pathPieces.length; i++) {
-                    sb.append(pathPieces[i]).append('\\');
-                }
-                String strPath = sb.substring(0, sb.length()-1);
-                Path path = Paths.get(strPath);
-                if(Files.isRegularFile(path)) {
-                    controller.uploadTextToTextPanel(path);
+                if(jTree.getLastSelectedPathComponent() != null) {
+                    Object[] pathPieces = jTree.getSelectionPath().getPath();
+                    StringBuilder sb = new StringBuilder();
+                    for (int i = 1; i < pathPieces.length; i++) {
+                        sb.append(pathPieces[i]).append('\\');
+                    }
+                    String strPath = sb.substring(0, sb.length()-1);
+                    Path path = Paths.get(strPath);
+                    if(Files.isRegularFile(path)) {
+                        controller.uploadTextToTextPanel(path);
+                    }
                 }
             }
         });

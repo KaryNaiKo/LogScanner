@@ -2,12 +2,11 @@ package splat.test.task.model;
 
 import splat.test.task.controller.Controller;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -15,9 +14,12 @@ public class Model {
     private Controller controller;
     private BlockingQueue<Path> queue;
     private ScanFileVisitor visitor;
+    private String keyWord;
+    private Map<Integer, TabHandler> tabHandlerMap;
 
     public Model() {
         queue = new ArrayBlockingQueue<>(1000);
+        tabHandlerMap = new HashMap<>();
     }
 
     public void setController(Controller controller) {
@@ -25,6 +27,7 @@ public class Model {
     }
 
     public void scan(Path path, String fileExtension, String keyWord) {
+        this.keyWord = keyWord;
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -47,17 +50,29 @@ public class Model {
         visitor.stop();
     }
 
-    public String loadTextFromFile(Path path) {
+    public String loadTextFirstTime(Path path, int indexOfTab) {
         try {
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(path.toFile())))) {
-                StringBuilder sb = new StringBuilder();
-                for (String line; (line = reader.readLine()) != null; ) {
-                    sb.append(line).append('\n');
-                }
-                return sb.toString();
-            }
-        } catch (IOException e) {
+            TabHandler tab = new TabHandler(keyWord, path);
+            tabHandlerMap.put(indexOfTab, tab);
+            return tab.loadFirst();
+        } catch (Exception e) {
             e.printStackTrace();
+        }
+        return "";
+    }
+
+    public String loadNext(int indexOfTab) {
+        TabHandler tab = tabHandlerMap.get(indexOfTab);
+        if (tab != null) {
+            return tab.loadNext();
+        }
+        return "";
+    }
+
+    public String loadPrevious(int indexOfTab) {
+        TabHandler tab = tabHandlerMap.get(indexOfTab);
+        if (tab != null) {
+            return tab.loadPrevious();
         }
         return "";
     }

@@ -29,14 +29,13 @@ public class MainFrame extends JFrame {
     }
 
     private void initGUI() {
-        JScrollPane scrollTextPane = new JScrollPane(textPanel);
         JScrollPane scrollTreePane = new JScrollPane(treePanel);
 
         this.add(new HeadPanel(controller), BorderLayout.NORTH);
         JPanel pane = new JPanel();
         pane.setLayout(new GridLayout());
         pane.add(scrollTreePane);
-        pane.add(scrollTextPane);
+        pane.add(textPanel);
         this.add(pane, BorderLayout.CENTER);
     }
 

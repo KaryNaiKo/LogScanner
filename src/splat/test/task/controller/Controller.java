@@ -26,17 +26,29 @@ public class Controller {
         return model.getContentForTree();
     }
 
-    public void stopScan() {
+    public void fireStopScan() {
         model.stopScan();
     }
 
-    public void clearJTree() {
+    public void fireClearJTree() {
         mainFrame.getTreePanel().clear();
     }
 
     public void uploadTextToTextPanel(Path path) {
         mainFrame.getTextPanel().clearTextPane();
-        String text = model.loadTextFromFile(path);
+        String text = model.loadTextFirstTime(path, 0);
+        mainFrame.getTextPanel().addTextToPane(text);
+    }
+
+    public void fireLoadNext() {
+        mainFrame.getTextPanel().clearTextPane();
+        String text = model.loadNext(0);
+        mainFrame.getTextPanel().addTextToPane(text);
+    }
+    
+    public void fireLoadPrevious() {
+        mainFrame.getTextPanel().clearTextPane();
+        String text = model.loadPrevious(0);
         mainFrame.getTextPanel().addTextToPane(text);
     }
 }
