@@ -4,7 +4,7 @@ import splat.test.task.controller.Controller;
 import splat.test.task.exeptions.ExceptionHandler;
 
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
+import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,12 +13,14 @@ public class TextPanel extends JPanel {
     private JTextPane textPane;
     private JTabbedPane tabbedPane;
     private Controller controller;
+    private Style match;
 
     public TextPanel(Controller controller) {
         this.controller = controller;
         textPane = new JTextPane();
         tabbedPane = new JTabbedPane();
         init();
+        createStyle();
     }
 
     private void init() {
@@ -43,10 +45,23 @@ public class TextPanel extends JPanel {
         this.add(scrollPane, BorderLayout.CENTER);
     }
 
-    public void addTextToPane(String str) {
+    private void createStyle() {
+        StyleContext sc = new StyleContext();
+        DefaultStyledDocument doc = new DefaultStyledDocument(sc);
+        textPane.setStyledDocument(doc);
+
+        match = sc.addStyle("Match", null);
+        match.addAttribute(StyleConstants.Foreground, Color.red);
+        match.addAttribute(StyleConstants.FontSize, 16);
+        match.addAttribute(StyleConstants.FontFamily, "serif");
+        match.addAttribute(StyleConstants.Bold, Boolean.TRUE);
+    }
+
+    public void addTextToPane(String[] str) {
         try {
-            int offset = textPane.getDocument().getLength();
-            textPane.getDocument().insertString(offset, str, null);
+            textPane.getDocument().insertString(0, str[0], null);
+            textPane.getDocument().insertString(str[0].length(), str[1], match);
+            textPane.getDocument().insertString(str[0].length() + str[1].length(), str[2], null);
         } catch (BadLocationException e) {
             ExceptionHandler.logPaneExeption(this, "Unable to insert text to textPane");
         }

@@ -26,6 +26,10 @@ public class Model {
         this.controller = controller;
     }
 
+    public String getKeyWord() {
+        return keyWord;
+    }
+
     public void scan(Path path, String fileExtension, String keyWord) {
         this.keyWord = keyWord;
         Thread thread = new Thread(new Runnable() {
@@ -50,7 +54,7 @@ public class Model {
         visitor.stop();
     }
 
-    public String loadTextFirstTime(Path path, int indexOfTab) {
+    public String[] loadTextFirstTime(Path path, int indexOfTab) {
         try {
             TabHandler tab = new TabHandler(keyWord, path);
             tabHandlerMap.put(indexOfTab, tab);
@@ -58,22 +62,22 @@ public class Model {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "";
+        return null;
     }
 
-    public String loadNext(int indexOfTab) {
+    public String[] loadNext(int indexOfTab) {
         TabHandler tab = tabHandlerMap.get(indexOfTab);
         if (tab != null) {
             return tab.loadNext();
         }
-        return "";
+        return null;
     }
 
-    public String loadPrevious(int indexOfTab) {
+    public String[] loadPrevious(int indexOfTab) {
         TabHandler tab = tabHandlerMap.get(indexOfTab);
         if (tab != null) {
             return tab.loadPrevious();
         }
-        return "";
+        return null;
     }
 }

@@ -18,6 +18,10 @@ public class Controller {
         this.mainFrame = mainFrame;
     }
 
+    public String getKeyWord() {
+        return model.getKeyWord();
+    }
+
     public void startScan(Path path, String fileExtension, String keyWord) {
         model.scan(path, fileExtension, keyWord);
     }
@@ -36,19 +40,19 @@ public class Controller {
 
     public void uploadTextToTextPanel(Path path) {
         mainFrame.getTextPanel().clearTextPane();
-        String text = model.loadTextFirstTime(path, 0);
+        String[] text = model.loadTextFirstTime(path, 0);
         mainFrame.getTextPanel().addTextToPane(text);
     }
 
     public void fireLoadNext() {
         mainFrame.getTextPanel().clearTextPane();
-        String text = model.loadNext(0);
+        String text[] = model.loadNext(0);
         mainFrame.getTextPanel().addTextToPane(text);
     }
     
     public void fireLoadPrevious() {
         mainFrame.getTextPanel().clearTextPane();
-        String text = model.loadPrevious(0);
+        String text[] = model.loadPrevious(0);
         mainFrame.getTextPanel().addTextToPane(text);
     }
 }
