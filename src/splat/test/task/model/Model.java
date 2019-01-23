@@ -37,7 +37,7 @@ public class Model {
             public void run() {
                 visitor = new ScanFileVisitor(keyWord, fileExtension, queue);
                 try {
-                    Files.walkFileTree(path,  visitor);
+                    Files.walkFileTree(path, visitor);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

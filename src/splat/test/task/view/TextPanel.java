@@ -59,9 +59,11 @@ public class TextPanel extends JPanel {
 
     public void addTextToPane(String[] str) {
         try {
-            textPane.getDocument().insertString(0, str[0], null);
-            textPane.getDocument().insertString(str[0].length(), str[1], match);
-            textPane.getDocument().insertString(str[0].length() + str[1].length(), str[2], null);
+            if (str != null) {
+                textPane.getDocument().insertString(0, str[0], null);
+                textPane.getDocument().insertString(str[0].length(), str[1], match);
+                textPane.getDocument().insertString(str[0].length() + str[1].length(), str[2], null);
+            }
         } catch (BadLocationException e) {
             ExceptionHandler.logPaneExeption(this, "Unable to insert text to textPane");
         }

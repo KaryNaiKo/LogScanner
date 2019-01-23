@@ -29,7 +29,7 @@ public class ScanFileVisitor extends SimpleFileVisitor<Path> {
         if (file.toString().endsWith(fileExtension)) {
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file.toFile())))) {
                 for (String line; (line = reader.readLine()) != null; ) {
-                    if(line.contains(keyWord)){
+                    if (line.contains(keyWord)) {
                         queue.add(file);
                         System.out.println("add to queue " + file.toString());
                         break;
@@ -37,7 +37,7 @@ public class ScanFileVisitor extends SimpleFileVisitor<Path> {
                 }
             }
         }
-        if(!isCancel) {
+        if (!isCancel) {
             return FileVisitResult.CONTINUE;
         } else {
             return FileVisitResult.TERMINATE;

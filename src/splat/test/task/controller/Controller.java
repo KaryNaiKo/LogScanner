@@ -1,5 +1,6 @@
 package splat.test.task.controller;
 
+import splat.test.task.exeptions.ExceptionHandler;
 import splat.test.task.model.Model;
 import splat.test.task.view.MainFrame;
 
@@ -47,12 +48,20 @@ public class Controller {
     public void fireLoadNext() {
         mainFrame.getTextPanel().clearTextPane();
         String text[] = model.loadNext(0);
-        mainFrame.getTextPanel().addTextToPane(text);
+        if (text == null) {
+            ExceptionHandler.logPaneExeption(mainFrame, "Not found");
+        } else {
+            mainFrame.getTextPanel().addTextToPane(text);
+        }
     }
-    
+
     public void fireLoadPrevious() {
         mainFrame.getTextPanel().clearTextPane();
         String text[] = model.loadPrevious(0);
-        mainFrame.getTextPanel().addTextToPane(text);
+        if (text == null) {
+            ExceptionHandler.logPaneExeption(mainFrame, "Not found");
+        } else {
+            mainFrame.getTextPanel().addTextToPane(text);
+        }
     }
 }
