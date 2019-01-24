@@ -37,24 +37,7 @@ public class TreePanel extends JPanel {
         this.add(jTree);
 
         jTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-        jTree.addTreeSelectionListener(new TreeSelectionListener() {
-            @Override
-            public void valueChanged(TreeSelectionEvent e) {
-                System.out.println("You are selected " + jTree.getLastSelectedPathComponent());
-                if (jTree.getLastSelectedPathComponent() != null) {
-                    Object[] pathPieces = jTree.getSelectionPath().getPath();
-                    StringBuilder sb = new StringBuilder();
-                    for (int i = 1; i < pathPieces.length; i++) {
-                        sb.append(pathPieces[i]).append('\\');
-                    }
-                    String strPath = sb.substring(0, sb.length() - 1);
-                    Path path = Paths.get(strPath);
-                    if (Files.isRegularFile(path)) {
-                        controller.fireLoadTextToSelectedTab(path);
-                    }
-                }
-            }
-        });
+        jTree.addTreeSelectionListener(new AddTreeSelectionListener());
 
         Thread treePopulator = new Thread(() -> {
             while (true) {
@@ -62,7 +45,7 @@ public class TreePanel extends JPanel {
                     Path path = queue.poll();
                     addToTreePanel(path);
                     treeModel.reload();
-                    System.out.println("poll from queue " + path.toString());
+                    System.out.println("Poll from queue " + path.toString());
                 }
             }
         });
@@ -79,8 +62,8 @@ public class TreePanel extends JPanel {
         DefaultMutableTreeNode cur = root.getNextNode();
         int i = 0;
         if (cur != null) {
-            DefaultMutableTreeNode node = null;
-            String curFile = null;
+            DefaultMutableTreeNode node;
+            String curFile;
             boolean hasSame;
             for (; cur != null && i < splittedFileName.length; cur = cur.getNextNode(), i++) {
                 node = cur;
@@ -98,9 +81,10 @@ public class TreePanel extends JPanel {
                     break;
                 }
             }
-
-        } else
+        } else {
             cur = root;
+        }
+
         while (i < splittedFileName.length) {
             DefaultMutableTreeNode node = new DefaultMutableTreeNode(splittedFileName[i++]);
             cur.add(node);
@@ -111,5 +95,24 @@ public class TreePanel extends JPanel {
     public void clear() {
         rootNode.removeAllChildren();
         treeModel.reload();
+    }
+
+    private class AddTreeSelectionListener implements TreeSelectionListener {
+        @Override
+        public void valueChanged(TreeSelectionEvent e) {
+            System.out.println("You are selected " + jTree.getLastSelectedPathComponent());
+            if (jTree.getLastSelectedPathComponent() != null) {
+                Object[] pathPieces = jTree.getSelectionPath().getPath();
+                StringBuilder sb = new StringBuilder();
+                for (int i = 1; i < pathPieces.length; i++) {
+                    sb.append(pathPieces[i]).append('\\');
+                }
+                String strPath = sb.substring(0, sb.length() - 1);
+                Path path = Paths.get(strPath);
+                if (Files.isRegularFile(path)) {
+                    controller.fireLoadTextToSelectedTab(path);
+                }
+            }
+        }
     }
 }

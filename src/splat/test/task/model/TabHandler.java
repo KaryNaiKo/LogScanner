@@ -1,8 +1,11 @@
 package splat.test.task.model;
 
+import splat.test.task.exeptions.ExceptionHandler;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.ArrayDeque;
 
@@ -19,13 +22,12 @@ public class TabHandler {
         this.positionsOfPreviousKeyWord = new ArrayDeque<>();
     }
 
-
     public String[] loadFirst() {
         try {
             long pos = findFistEntry();
             return readFrom(pos - SIZE_FOR_READING / 2);
         } catch (IOException e) {
-            e.printStackTrace();
+            ExceptionHandler.logExeption(e);
         }
         return null;
     }
@@ -37,7 +39,7 @@ public class TabHandler {
                 return readFrom(pos - SIZE_FOR_READING / 2);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            ExceptionHandler.logExeption(e);
         }
         return null;
     }
@@ -49,7 +51,7 @@ public class TabHandler {
                 return readFrom(pos - SIZE_FOR_READING / 2);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            ExceptionHandler.logExeption(e);
         }
         return null;
     }
@@ -61,17 +63,25 @@ public class TabHandler {
     private long findEntry(long start) throws IOException {
         reader.seek(start);
         currentBytePos = start;
-        boolean isFind = false;
-        for (String line; (line = reader.readLine()) != null; ) {
-            if (line.contains(keyWord)) {
-                currentBytePos += line.substring(0, line.indexOf(keyWord)).getBytes().length;
-                isFind = true;
-                break;
+        boolean isFound = false;
+        int length;
+        do {
+            byte[] bytes = new byte[SIZE_FOR_READING];
+            length = reader.read(bytes, 0, SIZE_FOR_READING);
+            if(length != -1) {
+                String str = new String(bytes, 0, length);
+                if (str.contains(keyWord)) {
+                    currentBytePos += str.substring(0, str.indexOf(keyWord)).getBytes().length;
+                    isFound = true;
+                } else {
+                    currentBytePos += length;
+                }
             } else {
-                currentBytePos += line.getBytes().length + 2;
+                break;
             }
-        }
-        if (isFind) {
+        } while (!isFound);
+
+        if (isFound) {
             return currentBytePos;
         }
         return -1;
@@ -99,9 +109,9 @@ public class TabHandler {
         int length = reader.read(bytes, 0, SIZE_FOR_READING);
         if (length != -1) {
             String[] strings = new String[3];
-            strings[0] = new String(bytes, 0, (int) index, "UTF-8");
-            strings[1] = new String(bytes, (int) index, keyWord.length(), "UTF-8");
-            strings[2] = new String(bytes, (int) index + keyWord.length(), length - ((int) index + keyWord.length()), "UTF-8");
+            strings[0] = new String(bytes, 0, (int) index, StandardCharsets.UTF_8);
+            strings[1] = new String(bytes, (int) index, keyWord.length(), StandardCharsets.UTF_8);
+            strings[2] = new String(bytes, (int) index + keyWord.length(), length - ((int) index + keyWord.length()), StandardCharsets.UTF_8);
             return strings;
         }
         return null;

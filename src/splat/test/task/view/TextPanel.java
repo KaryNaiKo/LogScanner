@@ -68,10 +68,10 @@ public class TextPanel extends JPanel {
         match.addAttribute(StyleConstants.Bold, Boolean.TRUE);
     }
 
-    public void addTextToPane(String[] str, int indexOfTab) {
+    public void addTextToTab(String[] str, int indexOfTab) {
         try {
-            JTextPane textPane = textPanes.get(indexOfTab);
             if (str != null) {
+                JTextPane textPane = textPanes.get(indexOfTab);
                 textPane.getDocument().insertString(0, str[0], null);
                 textPane.getDocument().insertString(str[0].length(), str[1], match);
                 textPane.getDocument().insertString(str[0].length() + str[1].length(), str[2], null);
@@ -81,7 +81,7 @@ public class TextPanel extends JPanel {
         }
     }
 
-    public void clearTextPane(int indexOfTab) {
+    public void clearTextTab(int indexOfTab) {
         textPanes.get(indexOfTab).setText("");
     }
 

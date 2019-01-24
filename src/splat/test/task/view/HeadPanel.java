@@ -1,6 +1,7 @@
 package splat.test.task.view;
 
 import splat.test.task.controller.Controller;
+import splat.test.task.exeptions.ExceptionHandler;
 
 import javax.swing.*;
 import java.awt.*;
@@ -95,8 +96,7 @@ public class HeadPanel extends JPanel {
                 controller.fireClearJTree();
                 controller.startScan(path, fileExtension.getText(), keyWord.getText());
             } catch (Exception e1) {
-                //ExceptionHandler.logPaneExeption(HeadPanel.this, "Incorrect directory");
-                e1.printStackTrace();
+                ExceptionHandler.logPaneExeption(HeadPanel.this, "Incorrect directory");
             }
         }
     }
@@ -105,7 +105,7 @@ public class HeadPanel extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             controller.fireStopScan();
-            System.out.println("cansel");
+            System.out.println("cancel");
         }
     }
 }

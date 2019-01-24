@@ -25,13 +25,13 @@ public class ScanFileVisitor extends SimpleFileVisitor<Path> {
 
     @Override
     public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-        System.out.println("we at " + file.toString());
+        System.out.println("Searching at " + file.toString());
         if (file.toString().endsWith(fileExtension)) {
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file.toFile())))) {
                 for (String line; (line = reader.readLine()) != null; ) {
                     if (line.contains(keyWord)) {
                         queue.add(file);
-                        System.out.println("add to queue " + file.toString());
+                        System.out.println("Add to queue " + file.toString());
                         break;
                     }
                 }

@@ -26,21 +26,14 @@ public class Model {
         this.controller = controller;
     }
 
-    public String getKeyWord() {
-        return keyWord;
-    }
-
     public void scan(Path path, String fileExtension, String keyWord) {
         this.keyWord = keyWord;
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                visitor = new ScanFileVisitor(keyWord, fileExtension, queue);
-                try {
-                    Files.walkFileTree(path, visitor);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        Thread thread = new Thread(() -> {
+            visitor = new ScanFileVisitor(keyWord, fileExtension, queue);
+            try {
+                Files.walkFileTree(path, visitor);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         });
         thread.start();

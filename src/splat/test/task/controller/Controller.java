@@ -19,10 +19,6 @@ public class Controller {
         this.mainFrame = mainFrame;
     }
 
-    public String getKeyWord() {
-        return model.getKeyWord();
-    }
-
     public void startScan(Path path, String fileExtension, String keyWord) {
         model.scan(path, fileExtension, keyWord);
     }
@@ -42,30 +38,30 @@ public class Controller {
     public void fireLoadTextToSelectedTab(Path path) {
         int selectedTab = mainFrame.getTextPanel().getSelectedTab();
         mainFrame.getTextPanel().setSelectedTabTitle(selectedTab, path.getFileName().toString());
-        mainFrame.getTextPanel().clearTextPane(selectedTab);
+        mainFrame.getTextPanel().clearTextTab(selectedTab);
         String[] text = model.loadTextFirstTime(path, selectedTab);
-        mainFrame.getTextPanel().addTextToPane(text, selectedTab);
+        mainFrame.getTextPanel().addTextToTab(text, selectedTab);
     }
 
     public void fireLoadNext() {
         int selectedTab = mainFrame.getTextPanel().getSelectedTab();
-        mainFrame.getTextPanel().clearTextPane(selectedTab);
+        mainFrame.getTextPanel().clearTextTab(selectedTab);
         String text[] = model.loadNext(selectedTab);
         if (text == null) {
             ExceptionHandler.logPaneExeption(mainFrame, "Not found");
         } else {
-            mainFrame.getTextPanel().addTextToPane(text, selectedTab);
+            mainFrame.getTextPanel().addTextToTab(text, selectedTab);
         }
     }
 
     public void fireLoadPrevious() {
         int selectedTab = mainFrame.getTextPanel().getSelectedTab();
-        mainFrame.getTextPanel().clearTextPane(selectedTab);
+        mainFrame.getTextPanel().clearTextTab(selectedTab);
         String text[] = model.loadPrevious(selectedTab);
         if (text == null) {
             ExceptionHandler.logPaneExeption(mainFrame, "Not found");
         } else {
-            mainFrame.getTextPanel().addTextToPane(text, selectedTab);
+            mainFrame.getTextPanel().addTextToTab(text, selectedTab);
         }
     }
 }
