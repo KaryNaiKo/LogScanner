@@ -44,7 +44,9 @@ public class Model {
     }
 
     public void stopScan() {
-        visitor.stop();
+        if (visitor != null) {
+            visitor.stop();
+        }
     }
 
     public String[] loadTextFirstTime(Path path, int indexOfTab) {
