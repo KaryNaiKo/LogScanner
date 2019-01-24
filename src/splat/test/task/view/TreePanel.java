@@ -50,7 +50,7 @@ public class TreePanel extends JPanel {
                     String strPath = sb.substring(0, sb.length() - 1);
                     Path path = Paths.get(strPath);
                     if (Files.isRegularFile(path)) {
-                        controller.uploadTextToTextPanel(path);
+                        controller.fireLoadTextToSelectedTab(path);
                     }
                 }
             }

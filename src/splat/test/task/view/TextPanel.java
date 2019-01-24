@@ -4,20 +4,23 @@ import splat.test.task.controller.Controller;
 import splat.test.task.exeptions.ExceptionHandler;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class TextPanel extends JPanel {
-    private JTextPane textPane;
+    private ArrayList<JTextPane> textPanes;
     private JTabbedPane tabbedPane;
     private Controller controller;
     private Style match;
 
     public TextPanel(Controller controller) {
         this.controller = controller;
-        textPane = new JTextPane();
+        textPanes = new ArrayList<>();
         tabbedPane = new JTabbedPane();
         init();
         createStyle();
@@ -34,22 +37,30 @@ public class TextPanel extends JPanel {
         previous.setMaximumSize(new Dimension(20, 20));
         JButton next = new JButton("Next");
         next.addActionListener(new NextActionListener());
+        JButton delete = new JButton("Delete Tab");
+        delete.addActionListener(new DeleteActionListener());
         next.setMaximumSize(new Dimension(20, 20));
         head.add(previous);
         head.add(next);
+        head.add(delete);
 
-        JScrollPane scrollPane = new JScrollPane(textPane);
-        //tabbedPane.addTab("test", scrollPane);
+        JTextPane textPane1 = new JTextPane();
+        textPanes.add(textPane1);
+        JScrollPane scrollPane1 = new JScrollPane(textPane1);
+        tabbedPane.addTab("", scrollPane1);
+
+        JTextPane textPane2 = new JTextPane();
+        textPanes.add(textPane2);
+        JScrollPane scrollPane2 = new JScrollPane(textPane2);
+        tabbedPane.addTab("create new", scrollPane2);
+
+        tabbedPane.addChangeListener(new TabbedChangeListener());
         this.add(tabbedPane, BorderLayout.CENTER);
         this.add(head, BorderLayout.NORTH);
-        this.add(scrollPane, BorderLayout.CENTER);
     }
 
     private void createStyle() {
         StyleContext sc = new StyleContext();
-        DefaultStyledDocument doc = new DefaultStyledDocument(sc);
-        textPane.setStyledDocument(doc);
-
         match = sc.addStyle("Match", null);
         match.addAttribute(StyleConstants.Foreground, Color.red);
         match.addAttribute(StyleConstants.FontSize, 16);
@@ -57,8 +68,9 @@ public class TextPanel extends JPanel {
         match.addAttribute(StyleConstants.Bold, Boolean.TRUE);
     }
 
-    public void addTextToPane(String[] str) {
+    public void addTextToPane(String[] str, int indexOfTab) {
         try {
+            JTextPane textPane = textPanes.get(indexOfTab);
             if (str != null) {
                 textPane.getDocument().insertString(0, str[0], null);
                 textPane.getDocument().insertString(str[0].length(), str[1], match);
@@ -69,8 +81,16 @@ public class TextPanel extends JPanel {
         }
     }
 
-    public void clearTextPane() {
-        textPane.setText("");
+    public void clearTextPane(int indexOfTab) {
+        textPanes.get(indexOfTab).setText("");
+    }
+
+    public int getSelectedTab() {
+        return tabbedPane.getSelectedIndex();
+    }
+
+    public void setSelectedTabTitle(int indexOfTab, String title) {
+        tabbedPane.setTitleAt(indexOfTab, title);
     }
 
     private class NextActionListener implements ActionListener {
@@ -84,6 +104,28 @@ public class TextPanel extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             controller.fireLoadPrevious();
+        }
+    }
+
+    private class DeleteActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            int selectedTab = tabbedPane.getSelectedIndex();
+            tabbedPane.remove(selectedTab);
+            textPanes.remove(selectedTab);
+        }
+    }
+
+    private class TabbedChangeListener implements ChangeListener {
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            if (tabbedPane.getSelectedIndex() == tabbedPane.getTabCount() - 1) {
+                tabbedPane.setTitleAt(tabbedPane.getTabCount() - 1, "");
+                JTextPane textPane = new JTextPane();
+                textPanes.add(textPane);
+                JScrollPane scrollPane = new JScrollPane(textPane);
+                tabbedPane.addTab("create new", scrollPane);
+            }
         }
     }
 }
